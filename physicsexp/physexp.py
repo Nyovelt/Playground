@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import optimize as op
-
+import math
 
 def Avg(arr:list):
     ret = 0
@@ -51,4 +51,7 @@ def leastSquares(x_group:list, y_group:list, start, end, delta):
     plt.title('%.5fx%+-.5f=y' % (A, B))
     plt.show()
     plt.savefig("leastSquares.png")
+    return [A,B]
  
+def YoungsModulus(L, H, k, d, D):
+    return (8*L*H)/(math.pi * k * d*d*D)

@@ -9,4 +9,5 @@ print("粗差后数据平均值",Avg(b))
 print("粗差后数据标准偏差",standardDeviationOfTheMean(b))
 x_group = np.array([10,20,30,40,50,60,70,80,90,100,110])
 y_group = np.array([1,1.425,1.9,2.3,2.7,3.1,3.5,3.925,4.325,4.775,5.175])
-leastSquares(x_group, y_group, 0, 120, 10)
+k = leastSquares(x_group, y_group, 0, 120, 10)[0]
+print(YoungsModulus(72, 67.2, k, Avg(b), 3.7), "N/cm^2")
