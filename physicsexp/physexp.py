@@ -10,6 +10,9 @@ def Avg(arr:list):
         ret += i
     return ret / len(arr)
 
+def inaccuracy(exact_value, approximate_value):
+    return abs(exact_value - approximate_value) /  exact_value
+
 def standardDeviation(arr:list):
     avg = Avg(arr)
     ret = 0
