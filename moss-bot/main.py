@@ -8,17 +8,12 @@ import time
 # telegram bot framework https://github.com/aiogram/aiogram
 from aiogram import *
 
-# mark status
-INIT, BASE_FILE, STUDENT_FILE = {
-    0, 1, 2
-}
-
 
 # environment, init etc.
 API_TOKEN = os.environ["API_TOKEN"]
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-
+status = {}  # To store the status of users
 
 
 @dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
@@ -38,7 +33,7 @@ async def save_file(message: types.file):
                                                status[message.from_user.id]))
     
     # download file
-    await bot.download_file(file_path, "./users/{}/{}/{}".format(message.from_user.id, status, file_name))
+    await bot.download_file(file_path, "./users/{}/{}/{}".format(message.from_user.id, status[message.from_user.id], file_name))
 
     logging.debug("{} has sent file {} and stored in {}".format(message.from_user.id, file_name,
                                                                 "./users/{}/{}/{}".format(message.from_user.id, status[message.from_user.id], file_name)))
@@ -64,9 +59,9 @@ async def send_welcome(message: types.Message):
     logging.debug("{} is sending base file".format(message.from_user.id))
 
     # mark status as BASE_FILE
-    status[message.from_user.id] = BASE_FILE
+    status[message.from_user.id] = "BASE_FILE"
 
-    await message.reply("Hello, {}, now send me the base file".format(message.from_user.id))
+    await message.reply("Hello, {}, now send me the base file, or type /finish.".format(message.from_user.username))
 
 
 @dp.message_handler(commands=['student'])
@@ -80,9 +75,9 @@ async def send_welcome(message: types.Message):
     logging.debug("{} is sending student files".format(message.from_user.id))
 
     # mark status as STUDENT_FILE
-    status[message.from_user.id] = STUDENT_FILE
-
-    await message.reply("Hello, {}, now send me the student file".format(message.from_user.id))
+    status[message.from_user.id] = "STUDENT_FILE"
+    print(status)
+    await message.reply("Hello, {}, now send me the student file, or type /finish.".format(message.from_user.username))
 
 
 @dp.message_handler(commands=['finish'])
@@ -104,12 +99,12 @@ async def send_welcome(message: types.Message):
             logging.debug("Moss result \n {}: {}".format(message.from_user.id, i))
 
     # init
-    status[message.from_user.id] = INIT
+    status[message.from_user.id] = "INIT"
+    print("cp -r ./users/{}/   ./backup/{}/{}/".format(message.from_user.id, message.from_user.id, times))
     os.system("rm -rf ./users/{}".format(message.from_user.id))
     
 
 
 if __name__ == '__main__':
-    status = dict()  # To store the status of users
     logging.basicConfig(level=logging.DEBUG)
     executor.start_polling(dp, skip_updates=True)
