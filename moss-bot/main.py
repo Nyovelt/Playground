@@ -100,7 +100,6 @@ async def send_welcome(message: types.Message):
 
     # init
     status[message.from_user.id] = "INIT"
-    print("cp -r ./users/{}/   ./backup/{}/{}/".format(message.from_user.id, message.from_user.id, times))
     os.system("rm -rf ./users/{}".format(message.from_user.id))
     
 
